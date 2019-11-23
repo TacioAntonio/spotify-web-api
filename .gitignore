@@ -46,3 +46,7 @@ jspm_packages
 # Token
 # babel/config.js
 # config.js
+lib
+lib/**/*.js
+dist
+dist/**/*.js
