@@ -44,5 +44,5 @@ jspm_packages
 *.tgz
 
 # Token
-babel/config.js
-config.js
+# babel/config.js
+# config.js
