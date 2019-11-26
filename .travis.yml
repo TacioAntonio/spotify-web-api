@@ -8,4 +8,4 @@ cache:
 before_script:
   - npm run build:umd:min
 after_success:
-  - npm run test:coverage
+  - npm run coveralls
