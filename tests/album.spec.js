@@ -1,19 +1,19 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-undef */
 import chai, { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
-import { getAlbum, getAlbums, getAlbumTracks } from '../src/album';
+import SpotifyWrapper from '../src/index';
 
 chai.use(sinonChai);
 
 global.fetch = require('node-fetch');
 
 describe('Album', () => {
+  let spotify;
   let fetchedStub;
   let promise;
 
   beforeEach(() => {
+    spotify = new SpotifyWrapper({});
     fetchedStub = sinon.stub(global, 'fetch');
     promise = fetchedStub.resolves({ json: () => ({ body: 'json' }) });
   });
@@ -24,37 +24,37 @@ describe('Album', () => {
 
   describe('smoke tests', () => {
     it('should have getAlbum method', () => {
-      expect(getAlbum).to.exist;
+      expect(spotify.album.getAlbum).to.exist;
     });
 
     it('should have getAlbums method', () => {
-      expect(getAlbums).to.exist;
+      expect(spotify.album.getAlbums).to.exist;
     });
 
-    it('should have getAlbumTracks method', () => {
-      expect(getAlbumTracks).to.exist;
+    it('should have getTracks method', () => {
+      expect(spotify.album.getTracks).to.exist;
     });
   });
 
   describe('getAlbum', () => {
     it('should call fetch method', () => {
-      const album = getAlbum();
+      const album = spotify.album.getAlbum();
 
       expect(fetchedStub).to.have.been.calledOnce;
     });
 
     it('should call fetch with the correct URL', () => {
-      const album = getAlbum('2i6nd4FV6y7K9fln6eelmR');
+      const album = spotify.album.getAlbum('2i6nd4FV6y7K9fln6eelmR');
 
       expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/albums/2i6nd4FV6y7K9fln6eelmR');
 
-      const album2 = getAlbum('2i6nd4FV6y7K9fln6eelmK');
+      const album2 = spotify.album.getAlbum('2i6nd4FV6y7K9fln6eelmK');
 
       expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/albums/2i6nd4FV6y7K9fln6eelmK');
     });
 
     it('should return the JSON Data from the Promise', () => {
-      const album = getAlbum('2i6nd4FV6y7K9fln6eelmR');
+      const album = spotify.album.getAlbum('2i6nd4FV6y7K9fln6eelmR');
 
       album.then(data => {
         expect(data).to.eql({ body: 'json' });
@@ -64,19 +64,19 @@ describe('Album', () => {
 
   describe('getAlbums', () => {
     it('should call fetch method', () => {
-      const albums = getAlbums();
+      const albums = spotify.album.getAlbums();
 
       expect(fetchedStub).to.have.been.calledOnce;
     });
 
     it('should call fetch with the correct URL', () => {
-      const albums = getAlbums(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
+      const albums = spotify.album.getAlbums(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
 
       expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/albums/?ids=2i6nd4FV6y7K9fln6eelmR,2i6nd4FV6y7K9fln6eelmK');
     });
 
     it('should return the JSON Data from the Promise', () => {
-      const albums = getAlbums(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
+      const albums = spotify.album.getAlbums(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
 
       albums.then(data => {
         expect(data).to.eql({ body: 'json' });
@@ -84,21 +84,21 @@ describe('Album', () => {
     });
   });
 
-  describe('getAlbumTracks', () => {
+  describe('getTracks', () => {
     it('should call fetch method', () => {
-      const albums = getAlbumTracks();
+      const albums = spotify.album.getTracks();
 
       expect(fetchedStub).to.have.been.calledOnce;
     });
 
     it('should call fetch with the correct URL', () => {
-      const albums = getAlbumTracks('2i6nd4FV6y7K9fln6eelmR');
+      const albums = spotify.album.getTracks('2i6nd4FV6y7K9fln6eelmR');
 
       expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/albums/2i6nd4FV6y7K9fln6eelmR/tracks');
     });
 
     it('should return the JSON Data from the Promise', () => {
-      const albums = getAlbumTracks('2i6nd4FV6y7K9fln6eelmR');
+      const albums = spotify.album.getTracks('2i6nd4FV6y7K9fln6eelmR');
 
       albums.then(data => {
         expect(data).to.eql({ body: 'json' });

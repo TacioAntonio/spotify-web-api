@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './lib/index',
+  entry: './index',
   output: {
     library: 'spotifyWrapper',
     libraryTarget: 'umd',

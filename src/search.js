@@ -1,17 +1,12 @@
-/* eslint-disable quote-props */
-/* eslint-disable no-undef */
-import { TOKEN, API_URL, toJSON } from './config';
+function searcher(type, query) {
+  return this.getRequest(`${this.apiURL}/search?q=${query}&type=${type}`);
+}
 
-export const search = (query, type) =>
-  fetch(`${API_URL}/search?q=${query}&type=${type}`, {
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  })
-    .then(toJSON);
-
-
-export const searchArtists = query => search(query, 'artist');
-export const searchAlbums = query => search(query, 'album');
-export const searchTracks = query => search(query, 'track');
-export const searchPlaylists = query => search(query, 'playlist');
+export default function search() {
+  return {
+    artists: searcher.bind(this, 'artist'),
+    albums: searcher.bind(this, 'album'),
+    tracks: searcher.bind(this, 'track'),
+    playlists: searcher.bind(this, 'playlist'),
+  };
+}

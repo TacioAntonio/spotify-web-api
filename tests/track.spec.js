@@ -1,17 +1,19 @@
 import chai, { expect } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
-import { getTrack, getTracks, getAudioFeature, getAudioFeatures, getAudioAnalysis } from '../src/track';
+import SpotifyWrapper from '../src/index';
 
 chai.use(sinonChai);
 
 global.fetch = require('node-fetch');
 
 describe('Track', () => {
+  let spotify;
   let fetchedStub;
   let promise;
 
   beforeEach(() => {
+    spotify = new SpotifyWrapper({});
     fetchedStub = sinon.stub(global, 'fetch');
     promise = fetchedStub.resolves({ json: () => ({ body: 'json' }) });
   });
@@ -22,46 +24,46 @@ describe('Track', () => {
 
   describe('smoke tests', () => {
     it('should have getTrack method', () => {
-      expect(getTrack).to.exist;
+      expect(spotify.track.getTrack).to.exist;
     });
 
     it('should have getTracks method', () => {
-      expect(getTracks).to.exist;
+      expect(spotify.track.getTracks).to.exist;
     });
 
     it('should have getAudioFeature method', () => {
-      expect(getAudioFeature).to.exist;
+      expect(spotify.track.getAudioFeature).to.exist;
     });
 
     it('should have getAudioFeatures method', () => {
-      expect(getAudioFeatures).to.exist;
+      expect(spotify.track.getAudioFeatures).to.exist;
     });
 
     it('should have getAudioAnalysis method', () => {
-      expect(getAudioAnalysis).to.exist;
+      expect(spotify.track.getAudioAnalysis).to.exist;
     });
   });
 
 
   describe('getTrack', () => {
     it('should call fetch method', () => {
-      const track = getTrack();
+      const track = spotify.track.getTrack();
 
       expect(fetchedStub).to.have.been.calledOnce;
     });
 
     it('should call fetch with the correct URL', () => {
-      const track = getTrack('2i6nd4FV6y7K9fln6eelmR');
+      const track = spotify.track.getTrack('2i6nd4FV6y7K9fln6eelmR');
 
       expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/tracks/2i6nd4FV6y7K9fln6eelmR');
 
-      const track2 = getTrack('2i6nd4FV6y7K9fln6eelmK');
+      const track2 = spotify.track.getTrack('2i6nd4FV6y7K9fln6eelmK');
 
       expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/tracks/2i6nd4FV6y7K9fln6eelmK');
     });
 
     it('should return the JSON Data from the Promise', () => {
-      const track = getTrack('2i6nd4FV6y7K9fln6eelmR');
+      const track = spotify.track.getTrack('2i6nd4FV6y7K9fln6eelmR');
 
       track.then(data => {
         expect(data).to.eql({ body: 'json' });
@@ -71,19 +73,19 @@ describe('Track', () => {
 
   describe('getTracks', () => {
     it('should call fetch method', () => {
-      const tracks = getTracks();
+      const tracks = spotify.track.getTracks();
 
       expect(fetchedStub).to.have.been.calledOnce;
     });
 
     it('should call fetch with the correct URL', () => {
-      const tracks = getTracks(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
+      const tracks = spotify.track.getTracks(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
 
       expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/tracks/?ids=2i6nd4FV6y7K9fln6eelmR,2i6nd4FV6y7K9fln6eelmK');
     });
 
     it('should return the JSON Data from the Promise', () => {
-      const tracks = getTracks(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
+      const tracks = spotify.track.getTracks(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
 
       tracks.then(data => {
         expect(data).to.eql({ body: 'json' });
@@ -93,19 +95,19 @@ describe('Track', () => {
 
   describe('getAudioFeature', () => {
     it('should call fetch method', () => {
-      const audioFeature = getAudioFeature();
+      const audioFeature = spotify.track.getAudioFeature();
 
       expect(fetchedStub).to.have.been.calledOnce;
     });
 
     it('should call fetch with the correct URL', () => {
-      const audioFeature = getAudioFeature('2i6nd4FV6y7K9fln6eelmR');
+      const audioFeature = spotify.track.getAudioFeature('2i6nd4FV6y7K9fln6eelmR');
 
       expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/audio-features/2i6nd4FV6y7K9fln6eelmR');
     });
 
     it('should return the JSON Data from the Promise', () => {
-      const audioFeature = getAudioFeature('2i6nd4FV6y7K9fln6eelmR');
+      const audioFeature = spotify.track.getAudioFeature('2i6nd4FV6y7K9fln6eelmR');
 
       audioFeature.then(data => {
         expect(data).to.eql({ body: 'json' });
@@ -115,19 +117,19 @@ describe('Track', () => {
 
   describe('getAudioFeatures', () => {
     it('should call fetch method', () => {
-      const audioFeatures = getAudioFeatures();
+      const audioFeatures = spotify.track.getAudioFeatures();
 
       expect(fetchedStub).to.have.been.calledOnce;
     });
 
     it('should call fetch with the correct URL', () => {
-      const audioFeatures = getAudioFeatures(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
+      const audioFeatures = spotify.track.getAudioFeatures(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
 
       expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/audio-features/?ids=2i6nd4FV6y7K9fln6eelmR,2i6nd4FV6y7K9fln6eelmK');
     });
 
     it('should return the JSON Data from the Promise', () => {
-      const audioFeatures = getAudioFeatures(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
+      const audioFeatures = spotify.track.getAudioFeatures(['2i6nd4FV6y7K9fln6eelmR', '2i6nd4FV6y7K9fln6eelmK']);
 
       audioFeatures.then(data => {
         expect(data).to.eql({ body: 'json' });
@@ -137,19 +139,19 @@ describe('Track', () => {
 
   describe('getAudioAnalysis', () => {
     it('should call fetch method', () => {
-      const audioAnalysis = getAudioAnalysis();
+      const audioAnalysis = spotify.track.getAudioAnalysis();
 
       expect(fetchedStub).to.have.been.calledOnce;
     });
 
     it('should call fetch with the correct URL', () => {
-      const audioAnalysis = getAudioAnalysis('2i6nd4FV6y7K9fln6eelmR');
+      const audioAnalysis = spotify.track.getAudioAnalysis('2i6nd4FV6y7K9fln6eelmR');
 
       expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/audio-analysis/2i6nd4FV6y7K9fln6eelmR');
     });
 
     it('should return the JSON Data from the Promise', () => {
-      const audioAnalysis = getAudioAnalysis('2i6nd4FV6y7K9fln6eelmR');
+      const audioAnalysis = spotify.track.getAudioAnalysis('2i6nd4FV6y7K9fln6eelmR');
 
       audioAnalysis.then(data => {
         expect(data).to.eql({ body: 'json' });
