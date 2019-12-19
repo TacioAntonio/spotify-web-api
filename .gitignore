@@ -47,6 +47,4 @@ jspm_packages
 # babel/config.js
 # config.js
 lib
-lib/**/*.js
 dist
-dist/**/*.js
